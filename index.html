@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UAT Cases: Route, Don&rsquo;t Fix</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&amp;family=Lexend:wght@400;500;600;700&amp;family=Lato:wght@400;700;900&amp;display=swap">
+<style>
+body{margin:0;font-family:'Lato',system-ui,sans-serif;background:#0E1B2E;color:#0B2545}
+a{color:#1466F0}a:hover{color:#0B4FC0}
+.stage *{box-sizing:border-box}
+.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace}
+.disp{font-family:'Lexend','Lato',sans-serif}
+.paused,.paused *{animation-play-state:paused !important}
+.sh{position:absolute;left:40px;top:-4px}
+.h2{font-family:'Lexend','Lato',sans-serif;font-size:30px;font-weight:700;color:#0B2545}
+.h2s{font-size:18px;color:#3B4F6B}
+.sc{position:absolute;top:66px;height:86px;border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.sr{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.sn{font-family:'Lexend','Lato',sans-serif;width:30px;height:30px;border-radius:15px;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.st{font-size:16px;font-weight:900;color:#0B2545;line-height:1.2}
+.tg{display:inline-flex;align-items:center;height:22px;padding:0 10px;border-radius:11px;color:#FFFFFF;font-size:11px;font-weight:900;letter-spacing:.03em;white-space:nowrap}
+.mk{position:absolute;right:-9px;bottom:-11px}
+.panel{position:absolute;left:40px;top:170px;width:1200px;height:460px;border-radius:22px;background:#FFFFFF;box-shadow:0 14px 36px rgba(11,37,69,.10);overflow:hidden}
+.win{position:absolute;left:0;top:0;width:1200px;height:460px;background:#FFFFFF}
+.ill{position:absolute;left:26px;top:26px;width:470px;height:408px;border-radius:18px;overflow:hidden}
+.tc{position:absolute;left:530px;top:30px;width:640px;display:flex;flex-direction:column;gap:12px}
+.eb{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.tt{font-family:'Lexend','Lato',sans-serif;font-size:28px;font-weight:700;color:#0B2545;line-height:1.2;margin-bottom:2px}
+.bl{display:flex;gap:12px;align-items:flex-start}
+.bn{width:26px;height:26px;border-radius:13px;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.bt{font-size:19px;line-height:1.4;color:#0B2545;font-weight:700}
+.lp{align-self:flex-start;margin-top:10px;height:46px;padding:0 20px 0 10px;border-radius:23px;display:inline-flex;align-items:center;gap:10px;font-size:17px;font-weight:900}
+.ex{margin-top:6px;border-radius:14px;background:#FFF7F0;border:2px dashed #C2410C;padding:12px 16px;display:flex;flex-direction:column;gap:6px}
+.exh{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#9A3412}
+.ext{font-size:17px;line-height:1.45;font-weight:700;color:#0B2545}
+.wc{position:absolute;background:#FFFFFF;border-radius:14px;box-shadow:0 10px 24px rgba(11,37,69,.14);overflow:hidden}
+.bar{height:30px;background:#E9EEF5;display:flex;align-items:center;gap:5px;padding:0 10px}
+.dot{width:8px;height:8px;border-radius:4px}
+.url{margin-left:6px;flex-grow:1;height:18px;border-radius:9px;background:#FFFFFF;font-size:11px;color:#3B4F6B;padding:0 8px;line-height:18px;white-space:nowrap;overflow:hidden}
+.ln{height:8px;border-radius:4px;background:#E3E9F2}
+.lab{font-size:12px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#5A6B84}
+.fld{height:32px;border-radius:8px;border:2px solid #C9D3E1;display:flex;align-items:center;padding:0 10px;font-size:13px;color:#0B2545}
+.av{position:absolute}
+@keyframes panX{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(-1264px)}}
+.shot{position:absolute;left:26px;top:26px;width:700px;height:408px;border-radius:14px;background:#EEF2F8;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tc2{position:absolute;left:752px;top:30px;width:424px;display:flex;flex-direction:column;gap:12px}
+.call{margin-top:6px;border-radius:14px;background:#1466F0;color:#FFFFFF;padding:14px 18px;display:flex;flex-direction:column;gap:4px}
+.rz{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:16px;background:#FFF7F0;border:2px solid #C2410C;color:#7C2D12;font-size:14px;font-weight:900;white-space:nowrap}
+.ch{height:40px;padding:0 16px;border-radius:20px;background:#FFFFFF;display:inline-flex;align-items:center;font-size:15px;font-weight:900}
+.row{height:44px;border-radius:12px;background:#FFFFFF;display:flex;align-items:center;gap:10px;padding:0 14px;font-size:16px;font-weight:700;color:#0B2545;box-shadow:0 4px 10px rgba(11,37,69,.06)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fromL{from{opacity:0;transform:translateX(-36px)}to{opacity:1;transform:none}}
+@keyframes fromR{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+@keyframes zoomIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes win{0%{opacity:0;transform:translateY(14px)}9%{opacity:1;transform:none}90%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-10px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(20,102,240,.45),0 18px 40px rgba(11,37,69,.14)}50%{box-shadow:0 0 0 16px rgba(20,102,240,0),0 18px 40px rgba(11,37,69,.14)}}
+@keyframes warnPulse{0%,100%{box-shadow:0 0 0 0 rgba(234,88,12,.55)}50%{box-shadow:0 0 0 12px rgba(234,88,12,0)}}
+@keyframes press{0%,100%{transform:scale(1)}50%{transform:scale(.94)}}
+@keyframes typeIn{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes stamp{0%{opacity:0;transform:scale(1.7) rotate(-7deg)}60%{opacity:1;transform:scale(.95) rotate(-7deg)}100%{opacity:1;transform:scale(1) rotate(-7deg)}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes march{to{stroke-dashoffset:-72}}
+@keyframes arc{from{stroke-dashoffset:302}to{stroke-dashoffset:0}}
+@keyframes pass{from{transform:translateX(0)}to{transform:translateX(196px)}}
+@keyframes toL{from{opacity:1;transform:none}to{opacity:0;transform:translate(-320px,250px) scale(.35)}}
+@keyframes toR{from{opacity:1;transform:none}to{opacity:0;transform:translate(320px,250px) scale(.35)}}
+@keyframes hiO{0%{background:#FFFFFF}100%{background:#FFF1E6;box-shadow:0 0 0 3px #C2410C}}
+@keyframes toGrey{to{background:#94A3B8}}
+@keyframes litRing{0%{box-shadow:0 0 0 0 currentColor;transform:none}8%,92%{box-shadow:0 0 0 4px currentColor,0 16px 30px rgba(11,37,69,.18);transform:translateY(-6px)}100%{box-shadow:0 0 0 0 transparent;transform:none}}
+.ctl{height:44px;min-width:44px;padding:0 14px;border-radius:10px;border:1px solid #2A3E5C;background:#15263F;color:#E6EEF8;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;white-space:nowrap}
+.ctl:hover{background:#1D3354}
+.ctl.main{background:#1466F0;border-color:#1466F0;color:#fff}
+.ctl.main:hover{background:#0B55D0}
+.chip{height:32px;padding:0 7px;letter-spacing:-.01em;border-radius:16px;border:1px solid #2A3E5C;background:transparent;color:#A9B8CC;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.chip:hover{color:#fff;border-color:#4A6488}
+.chip.done{color:#D5E0EE;border-color:#34507A;background:#16304F}
+.chip.on{color:#0B2545;background:#8FD16F;border-color:#8FD16F}
+</style>
+<style>
+html,body{height:100%}
+body{display:flex;align-items:center;justify-content:center;overflow:hidden}
+#fit{width:1280px;height:870px;transform-origin:center center;flex-shrink:0}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+<div id="fit">
+<div style="width: 1280px; height: 870px; background: #0E1B2E; display: flex; flex-direction: column; overflow: hidden;">
+
+<!-- hidden symbol library -->
+<svg width="0" height="0" style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+<defs>
+<symbol id="dc-customer" viewBox="0 0 200 200">
+<path d="M58 88 C52 38 148 38 142 88 L146 124 C132 132 124 116 122 104 L78 104 C76 116 68 132 54 124 Z" fill="#3B2A26"></path>
+<path d="M40 200 C40 150 66 128 100 128 C134 128 160 150 160 200 Z" fill="#23A094"></path>
+<path d="M84 129 L100 152 L116 129 Z" fill="#E6F6F3"></path>
+<rect x="89" y="104" width="22" height="28" rx="8" fill="#E2A77F"></rect>
+<ellipse cx="100" cy="82" rx="32" ry="36" fill="#F1C39E"></ellipse>
+<path d="M66 76 C68 42 132 40 136 78 C118 64 94 60 70 80 Z" fill="#3B2A26"></path>
+<circle cx="88" cy="87" r="3.8" fill="#1F2937"></circle>
+<circle cx="112" cy="87" r="3.8" fill="#1F2937"></circle>
+<circle cx="79" cy="98" r="5.5" fill="#F29A86" opacity=".45"></circle>
+<circle cx="121" cy="98" r="5.5" fill="#F29A86" opacity=".45"></circle>
+<path d="M90 102 Q100 109 110 102" stroke="#A0523D" stroke-width="3" fill="none" stroke-linecap="round"></path>
+</symbol>
+<symbol id="dc-agent" viewBox="0 0 200 200">
+<path d="M40 200 C40 150 66 128 100 128 C134 128 160 150 160 200 Z" fill="#1466F0"></path>
+<path d="M84 129 L100 150 L116 129 Z" fill="#FFFFFF"></path>
+<rect x="89" y="104" width="22" height="28" rx="8" fill="#B97A55"></rect>
+<ellipse cx="68" cy="88" rx="7" ry="10" fill="#C98B63"></ellipse>
+<ellipse cx="132" cy="88" rx="7" ry="10" fill="#C98B63"></ellipse>
+<ellipse cx="100" cy="82" rx="32" ry="36" fill="#D39A72"></ellipse>
+<path d="M67 80 C62 42 138 40 133 80 C126 60 80 58 67 80 Z" fill="#1F1A17"></path>
+<circle cx="88" cy="87" r="3.8" fill="#1F2937"></circle>
+<circle cx="112" cy="87" r="3.8" fill="#1F2937"></circle>
+<path d="M89 101 Q100 109 111 101" stroke="#7A3B2A" stroke-width="3" fill="none" stroke-linecap="round"></path>
+</symbol>
+<symbol id="dc-server" viewBox="0 0 120 150">
+<rect x="10" y="6" width="100" height="40" rx="8" fill="#243B5E"></rect>
+<rect x="10" y="54" width="100" height="40" rx="8" fill="#2E4A73"></rect>
+<rect x="10" y="102" width="100" height="40" rx="8" fill="#243B5E"></rect>
+<circle cx="28" cy="26" r="5" fill="#8FD16F"></circle><circle cx="28" cy="74" r="5" fill="#8FD16F"></circle><circle cx="28" cy="122" r="5" fill="#8FD16F"></circle>
+<rect x="46" y="22" width="50" height="8" rx="4" fill="#5B7BA6"></rect><rect x="46" y="70" width="50" height="8" rx="4" fill="#5B7BA6"></rect><rect x="46" y="118" width="50" height="8" rx="4" fill="#5B7BA6"></rect>
+</symbol>
+<symbol id="dc-check" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="11" fill="#3E9B2F"></circle>
+<path d="M6.5 12.5 L10.3 16.2 L17.5 8.6" stroke="#FFFFFF" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</symbol>
+<symbol id="dc-x" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="11" fill="#C2410C"></circle>
+<path d="M8 8l8 8M16 8l-8 8" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"></path>
+</symbol>
+<symbol id="dc-warn" viewBox="0 0 24 24">
+<path d="M12 3 L22 20.5 H2 Z" fill="#F2A93B" stroke="#8A5200" stroke-width="1.4" stroke-linejoin="round"></path>
+<path d="M12 9.5 V14.5" stroke="#5A3500" stroke-width="2.2" stroke-linecap="round"></path>
+<circle cx="12" cy="17.4" r="1.3" fill="#5A3500"></circle>
+</symbol>
+<symbol id="dc-ticket" viewBox="0 0 24 24">
+<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4z" fill="none" stroke="currentColor" stroke-width="1.8"></path>
+<path d="M9 5v14" stroke="currentColor" stroke-width="1.8" stroke-dasharray="2 2.4"></path>
+</symbol>
+<symbol id="dc-clock" viewBox="0 0 24 24">
+<circle cx="12" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.9"></circle>
+<path d="M12 8.5V13l3 2M10 2.5h4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path>
+</symbol>
+<symbol id="dc-phone" viewBox="0 0 24 24">
+<path d="M5 3.5h3.5l2 5-2.5 1.6a11 11 0 0 0 5.4 5.4l1.6-2.5 5 2v3.5a2 2 0 0 1-2 2A17 17 0 0 1 3 5.5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"></path>
+</symbol>
+<symbol id="dc-cal" viewBox="0 0 24 24">
+<rect x="3" y="5" width="18" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"></rect>
+<path d="M16 3v4M8 3v4M3 10h18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path>
+</symbol>
+<symbol id="dc-mail" viewBox="0 0 24 24">
+<rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"></rect>
+<path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"></path>
+</symbol>
+<symbol id="dc-lock" viewBox="0 0 24 24">
+<rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"></rect>
+<path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.9"></path>
+<circle cx="12" cy="15.6" r="1.6" fill="currentColor"></circle>
+</symbol>
+<symbol id="dc-doc" viewBox="0 0 40 48">
+<path d="M4 4h22l10 10v30H4z" fill="#FFFFFF" stroke="#6D4AE0" stroke-width="2.4" stroke-linejoin="round"></path>
+<path d="M26 4v10h10" fill="none" stroke="#6D4AE0" stroke-width="2.4" stroke-linejoin="round"></path>
+<path d="M11 24h18M11 31h18M11 38h12" stroke="#B9A8F2" stroke-width="3" stroke-linecap="round"></path>
+</symbol>
+<symbol id="dc-img" viewBox="0 0 24 24">
+<rect x="3" y="4" width="18" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"></rect>
+<circle cx="9" cy="9.5" r="1.8" fill="currentColor"></circle>
+<path d="M3.5 17l5-5 4 4 3-3 5 5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"></path>
+</symbol>
+<symbol id="dc-play" viewBox="0 0 24 24">
+<path d="M7 4.5v15l12-7.5z" fill="currentColor"></path>
+</symbol>
+<symbol id="dc-edit" viewBox="0 0 24 24">
+<path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"></path>
+<path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-width="1.9"></path>
+</symbol>
+</defs>
+</svg>
+
+<!-- ===================== STAGE ===================== -->
+<div id="stage" class="stage" style="position: relative; width: 1280px; height: 720px; overflow: hidden; background: #F3F6FB; flex-shrink: 0;">
+
+<div style="position: absolute; left: -160px; top: -200px; width: 560px; height: 560px; border-radius: 50%; background: #E6EEFA;"></div>
+<div style="position: absolute; right: -120px; bottom: -220px; width: 520px; height: 520px; border-radius: 50%; background: #EAF5E4;"></div>
+
+<div style="position: absolute; left: 28px; top: 14px; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 700; color: #3B4F6B; letter-spacing: .02em;">
+<span id="steps" style="display: contents;"></span>
+<span class="disp" style="font-weight: 700; color: #0B2545; font-size: 16px;">MotionPoint Support</span>
+<span style="width: 4px; height: 4px; border-radius: 2px; background: #94A3B8;"></span>
+<span>New Agent Training &middot; UAT Cases</span>
+</div>
+
+<!-- ============ SCENE 0 · INTRO ============ -->
+<template id="scene-0">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div style="position: absolute; left: 0; top: 40px; width: 1280px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;"><div style="font-size: 16px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: #3E8A2A; animation: up .8s .4s both;">Customer Support &middot; New Agent Training</div><h1 class="disp" style="margin: 0; font-size: 58px; line-height: 1.05; font-weight: 700; color: #0B2545; animation: up .9s .9s both;">UAT Cases: Route, Don&rsquo;t Fix</h1><p style="margin: 0; font-size: 23px; color: #3B4F6B; max-width: 1040px; animation: up .9s 1.6s both;">The customer&rsquo;s test drive before Go-Live, and your small, important part in it.</p></div>
+<div style="position: absolute; left: 40px; top: 250px; width: 280px; height: 180px; border-radius: 16px; background: #DCE7F7; border: 3px solid #1466F0; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 4.5s both;"><span class="eb" style="color: #1466F0;">What it is</span><span style="font-size: 17px; font-weight: 700; color: #0B2545; line-height: 1.4;">The customer tests the translated site before launch.</span></div>
+<div style="position: absolute; left: 340px; top: 250px; width: 280px; height: 180px; border-radius: 16px; background: #FCE3CC; border: 3px solid #C2410C; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 7s both;"><span class="eb" style="color: #C2410C;">How you spot it</span><span style="font-size: 17px; font-weight: 700; color: #0B2545; line-height: 1.4;">The orange UAT banner, and the MPD email.</span></div>
+<div style="position: absolute; left: 640px; top: 250px; width: 280px; height: 180px; border-radius: 16px; background: #E3F4E5; border: 3px solid #2E7D32; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 9.5s both;"><span class="eb" style="color: #2E7D32;">Your job</span><span style="font-size: 17px; font-weight: 700; color: #0B2545; line-height: 1.4;">Milestone, customer note, assign. That&rsquo;s it.</span></div>
+<div style="position: absolute; left: 940px; top: 250px; width: 300px; height: 180px; border-radius: 16px; background: #FFF1F0; border: 3px solid #B42318; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 12s both;"><span class="eb" style="color: #B42318;">Never</span><span style="font-size: 17px; font-weight: 700; color: #0B2545; line-height: 1.4;">Troubleshoot, assign to Delivery, or bill.</span></div>
+<div style="position: absolute; left: 160px; top: 466px; width: 960px; height: 100px; border-radius: 20px; background: #0B2545; color: #FFFFFF; display: flex; align-items: center; gap: 18px; padding: 0 30px; animation: up .7s 16s both;"><svg width="40" height="40" style="flex-shrink: 0; color: #FFD27A;"><use href="#dc-check"></use></svg><span style="font-size: 21px; font-weight: 900; line-height: 1.4;">Use the UAT kit button at the top of this page anytime.</span></div>
+</div>
+</template>
+
+<!-- ============ SCENE 1 · URGENT? ============ -->
+<template id="scene-1">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div class="sh" style="animation: up .6s .2s both;"><div class="h2">Part 1: What UAT is</div><div class="h2s">User Acceptance Testing, in plain words.</div></div>
+<div class="sc" style="left: 40px; width: 592px; background: #DCE7F7; color: #1466F0; animation: up .6s 1.4s both, litRing 22s 4s both;"><div class="sr"><span class="sn" style="background: #1466F0;">1</span><span class="tg" style="background: #1466F0;">The idea</span></div><div class="st">Test drive</div><svg class="mk" width="28" height="28" style="animation: pop .5s 25.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="sc" style="left: 648px; width: 592px; background: #E8EAFD; color: #5867E8; animation: up .6s 1.6s both, litRing 22s 26s both;"><div class="sr"><span class="sn" style="background: #5867E8;">2</span><span class="tg" style="background: #5867E8;">Not the same</span></div><div class="st">UAT vs QA</div><svg class="mk" width="28" height="28" style="animation: pop .5s 47.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="panel" style="animation: up .7s 2.2s both;">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #8A99AD; animation: fadeOut .5s 3.8s forwards;">First, the basics.</div>
+<div class="win" style="animation: win 22s 4s both;">
+<div class="shot" style="background: #DCE7F7; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; height: 150px; border-radius: 16px; background: #DCE7F7; border: 3px solid #1466F0; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 5s both;"><b style="font-size: 17px; color: #0B2545;">UAT: User Acceptance Testing</b><span style="font-size: 14.5px; color: #0B2545; line-height: 1.5;">The customer tests the translated website, or new functionality, in a test environment, to make sure everything works as expected before it goes live.</span></div><div style="position: absolute; left: 20px; top: 184px; width: 660px; height: 110px; border-radius: 16px; background: #FFF; border: 2px dashed #1466F0; padding: 16px 22px; display: flex; gap: 16px; align-items: center; animation: pop .5s 9s both;"><svg width="40" height="40" style="flex-shrink: 0; color: #1466F0;"><use href="#dc-customer"></use></svg><span style="font-size: 16px; font-style: italic; color: #0B2545; line-height: 1.45;">&ldquo;We&rsquo;ve reviewed the website, tested it, and we&rsquo;re comfortable approving it for launch.&rdquo;</span></div><div style="position: absolute; left: 20px; top: 312px; width: 660px; height: 66px; border-radius: 20px; background: #0B2545; color: #FFFFFF; display: flex; align-items: center; gap: 18px; padding: 0 30px; animation: up .7s 13s both;"><span style="font-size: 15.5px; font-weight: 900;">Think of it as a test drive, before the green light to launch.</span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #1466F0;">What it is &middot; 1 of 2</div>
+<div class="tt" style="font-size: 26px;">The customer&rsquo;s test drive</div>
+<div class="bl" style="animation: fromR .6s 5s both;"><span class="bn" style="background: #DCE7F7; color: #1466F0;">1</span><span class="bt" style="font-size: 18px;">The customer tests the translated site.</span></div>
+<div class="bl" style="animation: fromR .6s 7s both;"><span class="bn" style="background: #DCE7F7; color: #1466F0;">2</span><span class="bt" style="font-size: 18px;">In a test environment, before launch.</span></div>
+<div class="bl" style="animation: fromR .6s 9s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">3</span><span class="bt" style="font-size: 18px;">Then they approve it for Go-Live.</span></div>
+</div>
+</div>
+<div class="win" style="animation: win 22s 26s both;">
+<div class="shot" style="background: #E8EAFD; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 320px; height: 250px; border-radius: 16px; background: #E8EAFD; border: 3px solid #5867E8; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 27s both; justify-content: flex-start;"><span class="eb" style="color: #5867E8;">QA</span><b style="font-size: 17px; color: #0B2545;">MotionPoint checks</b><span style="font-size: 14px; color: #0B2545; line-height: 1.5;">Our internal QA team validates the solution: translation quality, functionality and UX.</span></div><div style="position: absolute; left: 360px; top: 14px; width: 320px; height: 250px; border-radius: 16px; background: #FCE3CC; border: 3px solid #C2410C; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 30s both; justify-content: flex-start;"><span class="eb" style="color: #C2410C;">UAT</span><b style="font-size: 17px; color: #0B2545;">The customer checks</b><span style="font-size: 14px; color: #0B2545; line-height: 1.5;">The customer validates that what we delivered meets their business expectations.</span></div><div style="position: absolute; left: 20px; top: 282px; width: 660px; height: 96px; border-radius: 16px; background: #EEF1F5; border: 3px solid #5B6474; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 35s both;"><span style="font-size: 14.5px; color: #0B2545; line-height: 1.5;"><b>How long?</b> It depends on the project plan or agreement: for example 5, 10 or 15 business days. There&rsquo;s no fixed standard.</span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #5867E8;">What it is &middot; 2 of 2</div>
+<div class="tt" style="font-size: 26px;">UAT is not QA</div>
+<div class="bl" style="animation: fromR .6s 27s both;"><span class="bn" style="background: #E8EAFD; color: #5867E8;">1</span><span class="bt" style="font-size: 18px;">QA: our team checks the work.</span></div>
+<div class="bl" style="animation: fromR .6s 30s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">2</span><span class="bt" style="font-size: 18px;">UAT: the customer checks it.</span></div>
+<div class="bl" style="animation: fromR .6s 35s both;"><span class="bn" style="background: #E3E8F0; color: #0B2545;">3</span><span class="bt" style="font-size: 18px;">The length is set per project.</span></div>
+</div>
+</div>
+</div>
+</div>
+</template>
+
+<!-- ============ SCENE 2 · WHO ============ -->
+<template id="scene-2">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div class="sh" style="animation: up .6s .2s both;"><div class="h2">Part 2: Where UAT fits</div><div class="h2s">The journey from kickoff to Go-Live.</div></div>
+<div class="sc" style="left: 40px; width: 592px; background: #DCE7F7; color: #1466F0; animation: up .6s 1.4s both, litRing 22s 4s both;"><div class="sr"><span class="sn" style="background: #1466F0;">1</span><span class="tg" style="background: #1466F0;">Steps 1&ndash;4</span></div><div class="st">Getting ready</div><svg class="mk" width="28" height="28" style="animation: pop .5s 25.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="sc" style="left: 648px; width: 592px; background: #FCE3CC; color: #C2410C; animation: up .6s 1.6s both, litRing 22s 26s both;"><div class="sr"><span class="sn" style="background: #C2410C;">2</span><span class="tg" style="background: #C2410C;">Steps 5&ndash;8</span></div><div class="st">Test + launch</div><svg class="mk" width="28" height="28" style="animation: pop .5s 47.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="panel" style="animation: up .7s 2.2s both;">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #8A99AD; animation: fadeOut .5s 3.8s forwards;">How does a project unfold?</div>
+<div class="win" style="animation: win 22s 4s both;">
+<div class="shot" style="background: #DCE7F7; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; height: 80px; border-radius: 14px; background: #DCE7F7; border: 2px solid #1466F0; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 5s both;"><span style="width: 32px; height: 32px; border-radius: 16px; background: #1466F0; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">Assign PM and translators</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">A PM and translation team meet the customer.</span></span></div><div style="position: absolute; left: 20px; top: 106px; width: 660px; height: 80px; border-radius: 14px; background: #DCE7F7; border: 2px solid #1466F0; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 7.5s both;"><span style="width: 32px; height: 32px; border-radius: 16px; background: #1466F0; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">Domain records and access</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">CNAME records, CDN access: getting ready for the proxy.</span></span></div><div style="position: absolute; left: 20px; top: 198px; width: 660px; height: 80px; border-radius: 14px; background: #DCE7F7; border: 2px solid #1466F0; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 10s both;"><span style="width: 32px; height: 32px; border-radius: 16px; background: #1466F0; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">Style guide and glossary</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">Industry terms, brand voice and tone.</span></span></div><div style="position: absolute; left: 20px; top: 290px; width: 660px; height: 80px; border-radius: 14px; background: #DCE7F7; border: 2px solid #1466F0; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 12.5s both;"><span style="width: 32px; height: 32px; border-radius: 16px; background: #1466F0; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">Translation samples</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">Five translated sample pages for the customer to review.</span></span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #1466F0;">The journey &middot; 1 of 2</div>
+<div class="tt" style="font-size: 26px;">Getting ready</div>
+<div class="bl" style="animation: fromR .6s 5s both;"><span class="bn" style="background: #DCE7F7; color: #1466F0;">1</span><span class="bt" style="font-size: 18px;">A PM and a team are assigned.</span></div>
+<div class="bl" style="animation: fromR .6s 7.5s both;"><span class="bn" style="background: #DCE7F7; color: #1466F0;">2</span><span class="bt" style="font-size: 18px;">Technical set-up and resources.</span></div>
+<div class="bl" style="animation: fromR .6s 12.5s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">3</span><span class="bt" style="font-size: 18px;">Samples for the customer.</span></div>
+</div>
+</div>
+<div class="win" style="animation: win 22s 26s both;">
+<div class="shot" style="background: #FCE3CC; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; height: 80px; border-radius: 14px; background: #E8EAFD; border: 2px solid #5867E8; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 27s both;"><span style="width: 32px; height: 32px; border-radius: 16px; background: #5867E8; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">Translate and QA</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">Translate, proofread, implement, then a final review (our QA).</span></span></div><div style="position: absolute; left: 20px; top: 106px; width: 660px; height: 80px; border-radius: 14px; background: #FCE3CC; border: 2px solid #C2410C; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 29.5s both; box-shadow: 0 0 0 4px #F6A600, 0 10px 24px rgba(0,0,0,.15);"><span style="width: 32px; height: 32px; border-radius: 16px; background: #C2410C; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">6</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">UAT: the customer tests</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">Issues reported, MotionPoint fixes, the customer approves.</span></span></div><div style="position: absolute; left: 20px; top: 198px; width: 660px; height: 80px; border-radius: 14px; background: #E3F4E5; border: 2px solid #2E7D32; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 32s both;"><span style="width: 32px; height: 32px; border-radius: 16px; background: #2E7D32; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">7</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">Go-Live</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">A code snippet on the customer&rsquo;s site activates the translated site.</span></span></div><div style="position: absolute; left: 20px; top: 290px; width: 660px; height: 80px; border-radius: 14px; background: #E3E8F0; border: 2px solid #0B2545; padding: 10px 12px; display: flex; gap: 10px; align-items: center; animation: fromL .5s 34.5s both;"><span style="width: 32px; height: 32px; border-radius: 16px; background: #0B2545; color: #FFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">8</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 15px; color: #0B2545;">Operate</b><span style="font-size: 12.5px; color: #3B4F6B; line-height: 1.35;">Support, CXM, PM, TAM and more keep it running.</span></span></div><div style="position: absolute; left: 560px; top: 110px; padding: 4px 10px; border-radius: 8px; background: #C2410C; color: #FFFFFF; font-size: 12px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,.18); animation: pop .45s 31s both; z-index: 4;">YOU ARE HERE</div></div>
+<div class="tc2">
+<div class="eb" style="color: #C2410C;">The journey &middot; 2 of 2</div>
+<div class="tt" style="font-size: 26px;">Testing and launch</div>
+<div class="bl" style="animation: fromR .6s 27s both;"><span class="bn" style="background: #E8EAFD; color: #5867E8;">1</span><span class="bt" style="font-size: 18px;">Our QA reviews the site.</span></div>
+<div class="bl" style="animation: fromR .6s 29.5s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">2</span><span class="bt" style="font-size: 18px;">UAT: the customer tests and approves.</span></div>
+<div class="bl" style="animation: fromR .6s 32s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">3</span><span class="bt" style="font-size: 18px;">Go-Live, then normal operation.</span></div>
+<div class="call" style="background: #B42318; animation: pop .5s 38s both;"><span class="lab" style="color: #FFFFFF; opacity: .8;">Remember</span><span style="font-size: 18px; font-weight: 900; line-height: 1.35;">UAT sits right before Go-Live. Delays here can delay the launch.</span></div>
+</div>
+</div>
+</div>
+</div>
+</template>
+
+<!-- ============ SCENE 3 · ESCALATE ============ -->
+<template id="scene-3">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div class="sh" style="animation: up .6s .2s both;"><div class="h2">Part 3: How you spot a UAT case</div><div class="h2s">Two signals: the banner, and the MPD email.</div></div>
+<div class="sc" style="left: 40px; width: 389.33px; background: #FCE3CC; color: #C2410C; animation: up .6s 1.4s both, litRing 22s 4s both;"><div class="sr"><span class="sn" style="background: #C2410C;">1</span><span class="tg" style="background: #C2410C;">In Salesforce</span></div><div class="st">The banner</div><svg class="mk" width="28" height="28" style="animation: pop .5s 25.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="sc" style="left: 445.33px; width: 389.33px; background: #FCE3CC; color: #C2410C; animation: up .6s 1.6s both, litRing 22s 26s both;"><div class="sr"><span class="sn" style="background: #C2410C;">2</span><span class="tg" style="background: #C2410C;">In Outlook</span></div><div class="st">MPD email</div><svg class="mk" width="28" height="28" style="animation: pop .5s 47.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="sc" style="left: 850.67px; width: 389.33px; background: #E8EAFD; color: #5867E8; animation: up .6s 1.8s both, litRing 22s 48s both;"><div class="sr"><span class="sn" style="background: #5867E8;">3</span><span class="tg" style="background: #5867E8;">IC + maintenance</span></div><div class="st">The Notes line</div><svg class="mk" width="28" height="28" style="animation: pop .5s 69.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="panel" style="animation: up .7s 2.2s both;">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #8A99AD; animation: fadeOut .5s 3.8s forwards;">How do you know it&rsquo;s UAT?</div>
+<div class="win" style="animation: win 22s 4s both;">
+<div class="shot" style="background: #FCE3CC; display: block;"><div class="wc" style="left: 20px; top: 14px; width: 660px; height: 364px; background: #FFFFFF; overflow: hidden; animation: zoomIn .6s 4.5s both;"><div style="position: relative; height: 100%; background: #F3F3F3;"><div style="height: 34px; background: #0B5CAB; color: #FFFFFF; display: flex; align-items: center; padding: 0 14px; font-size: 13px; font-weight: 700;">Case &middot; 00012345</div><div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;"><div style="background: #FFF; border-radius: 6px; border: 1px solid #DCE1E8; padding: 10px 14px; display: flex; gap: 26px;"><div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11.5px; color: #5B6474;">Account</span><span style="font-size: 13.5px; color: #0B2545; font-weight: 700;">Northwind Retail</span></div><div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11.5px; color: #5B6474;">Priority</span><span style="font-size: 13.5px; color: #0B2545; font-weight: 700;">Standard</span></div><div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11.5px; color: #5B6474;">Status</span><span style="font-size: 13.5px; color: #0B2545; font-weight: 700;">New</span></div><div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11.5px; color: #5B6474;">Origin</span><span style="font-size: 13.5px; color: #0B2545; font-weight: 700;">Web</span></div></div><div style="height: 46px; border-radius: 4px; background: #DD7A01; color: #FFF; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14.5px; font-weight: 700; animation: pop .5s 7s both, warnPulse 1.6s 7.5s 3;"><span style="font-size: 18px;">&#9888;</span>This case may be a part of a project&rsquo;s UAT phase.</div><div style="background: #FFF; border-radius: 6px; border: 1px solid #DCE1E8; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 11.5px; color: #5B6474;">Subject</span><b style="font-size: 14px; color: #0B2545;">Spanish site: checkout button does nothing</b><span style="font-size: 11.5px; color: #5B6474; margin-top: 6px;">Description</span><span style="font-size: 13px; color: #0B2545; line-height: 1.45;">We&rsquo;re testing the Spanish site before launch. On the cart page, the checkout button doesn&rsquo;t respond. Screenshot attached.</span></div></div></div></div><div style="position: absolute; left: 632px; top: 92px; width: 34px; height: 34px; border-radius: 17px; background: #1466F0; color: #FFFFFF; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; z-index: 4; animation: pop .45s 7.5s both;">1</div></div>
+<div class="tc2">
+<div class="eb" style="color: #C2410C;">Spot it &middot; 1 of 3</div>
+<div class="tt" style="font-size: 26px;">The orange UAT banner</div>
+<div class="bl" style="animation: fromR .6s 7s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">1</span><span class="bt" style="font-size: 18px;">Salesforce shows a banner on the case.</span></div>
+<div class="bl" style="animation: fromR .6s 9s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">2</span><span class="bt" style="font-size: 18px;">It reads: this case may be part of a project&rsquo;s UAT phase.</span></div>
+<div class="call" style="background: #B42318; animation: pop .5s 15s both;"><span class="lab" style="color: #FFFFFF; opacity: .8;">Rule</span><span style="font-size: 18px; font-weight: 900; line-height: 1.35;">See the banner? Stop. Don&rsquo;t troubleshoot.</span></div>
+</div>
+</div>
+<div class="win" style="animation: win 22s 26s both;">
+<div class="shot" style="background: #DCE7F7; display: block;"><div class="wc" style="left: 20px; top: 14px; width: 660px; height: 364px; background: #FFFFFF; overflow: hidden; animation: zoomIn .6s 26.5s both;"><div style="position: relative; height: 100%; background: #FFF;"><div style="height: 34px; background: #0F4C81; color: #FFFFFF; display: flex; align-items: center; padding: 0 14px; font-size: 13px; font-weight: 700;">Outlook &middot; MPD email</div><div style="padding: 10px 16px; display: flex; flex-direction: column; gap: 1px;"><div style="font-size: 12.5px; color: #3B4F6B; padding-bottom: 6px; border-bottom: 1px solid #DCE1E8; margin-bottom: 6px;"><b style="color: #0B2545;">To:</b> mpd &nbsp; <b style="color: #0B2545;">Cc:</b> PM, QA, TAM, Support</div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">Customer Name:</span> Northwind Retail</div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">Project Name:</span> 26-00 &ndash; NWR &ndash; ES</div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">Delivery Date:</span> 11/20/26</div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">Go Live date:</span> TBD</div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">Site:</span> es.northwind-retail.example</div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">UAT Period (QA: QA analyst):</span> <span style="background: #FFF4D6; box-shadow: 0 0 0 3px #F6A600; border-radius: 4px; padding: 1px 5px; animation: pop .45s 32s both;">11/20/26 &ndash; 12/04/26</span></div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">Customer contacts:</span> <span style="background: #FFF4D6; box-shadow: 0 0 0 3px #F6A600; border-radius: 4px; padding: 1px 5px; animation: pop .45s 36s both;">Alex Rivera</span></div><div style="font-size: 13px; color: #0B2545; line-height: 1.55;"><span style="color: #3B4F6B;">Notes:</span> MTPE during the IC; Brand Adaptive once in maintenance</div></div></div></div><div style="position: absolute; left: 440px; top: 184px; padding: 4px 10px; border-radius: 8px; background: #C2410C; color: #FFFFFF; font-size: 12px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,.18); animation: pop .45s 32.5s both; z-index: 4;">Dates + QA team</div><div style="position: absolute; left: 440px; top: 207px; padding: 4px 10px; border-radius: 8px; background: #1466F0; color: #FFFFFF; font-size: 12px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,.18); animation: pop .45s 36.5s both; z-index: 4;">Customer contact</div></div>
+<div class="tc2">
+<div class="eb" style="color: #1466F0;">Spot it &middot; 2 of 3</div>
+<div class="tt" style="font-size: 26px;">The MPD email</div>
+<div class="bl" style="animation: fromR .6s 27s both;"><span class="bn" style="background: #DCE7F7; color: #1466F0;">1</span><span class="bt" style="font-size: 18px;">Sent to all teams on the project.</span></div>
+<div class="bl" style="animation: fromR .6s 32s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">2</span><span class="bt" style="font-size: 18px;">The UAT period and assigned team.</span></div>
+<div class="bl" style="animation: fromR .6s 36s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">3</span><span class="bt" style="font-size: 18px;">The customer contacts.</span></div>
+<div class="call" style="background: #0B2545; animation: pop .5s 39s both;"><span class="lab" style="color: #FFFFFF; opacity: .8;">Tip</span><span style="font-size: 18px; font-weight: 900; line-height: 1.35;">Example data only. Search your Outlook for the MPD email by customer or project name.</span></div>
+</div>
+</div>
+<div class="win" style="animation: win 22s 48s both;">
+<div class="shot" style="background: #E8EAFD; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; padding: 8px 14px; border-radius: 10px; background: #FFF; border: 1px solid #DCE1E8; font-size: 13.5px; color: #0B2545; animation: fadeIn .5s 48.5s both;"><span style="color: #3B4F6B;">Notes:</span> <span style="background: #FFF4D6; box-shadow: 0 0 0 3px #F6A600; border-radius: 4px; padding: 1px 5px; animation: pop .45s 49.5s both;">MTPE during the IC; Brand Adaptive once in maintenance</span></div><div style="position: absolute; left: 0; top: 50px; width: 700px; height: 300px;"><div style="position: absolute; left: 20px; top: 14px; width: 320px; height: 230px; border-radius: 16px; background: #E8EAFD; border: 2px solid #5867E8; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; animation: pop .5s 51s both;"><span class="eb" style="color: #5867E8;">Initial Conversion (IC)</span><b style="font-size: 17px; color: #0B2545; line-height: 1.25;">MTPE: Machine Translation Post-Editing</b><span style="font-size: 13.5px; color: #0B2545; line-height: 1.5;">The site&rsquo;s existing content is converted for the first time. Machine translation drafts it, and human linguists review and edit it.</span></div><div style="position: absolute; left: 360px; top: 14px; width: 320px; height: 230px; border-radius: 16px; background: #DDF3F7; border: 2px solid #0E7490; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; animation: pop .5s 55s both;"><span class="eb" style="color: #0E7490;">Maintenance</span><b style="font-size: 17px; color: #0B2545; line-height: 1.25;">Brand Adaptive</b><span style="font-size: 13.5px; color: #0B2545; line-height: 1.5;">After the IC, new and updated content uses machine translation adapted to the customer&rsquo;s brand voice and terminology.</span></div></div><div style="position: absolute; left: 20px; top: 300px; width: 660px; height: 78px; border-radius: 20px; background: #0B2545; color: #FFFFFF; display: flex; align-items: center; gap: 18px; padding: 0 30px; animation: up .7s 60s both;"><span style="font-size: 15px; font-weight: 900; line-height: 1.45;">IC: build the translated site, human-reviewed. Maintenance: keep it current, on brand and at scale.</span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #5867E8;">Spot it &middot; 3 of 3</div>
+<div class="tt" style="font-size: 26px;">Reading the Notes line</div>
+<div class="bl" style="animation: fromR .6s 51s both;"><span class="bn" style="background: #E8EAFD; color: #5867E8;">1</span><span class="bt" style="font-size: 18px;">IC means Initial Conversion.</span></div>
+<div class="bl" style="animation: fromR .6s 52.5s both;"><span class="bn" style="background: #E8EAFD; color: #5867E8;">2</span><span class="bt" style="font-size: 18px;">IC: MTPE, human-reviewed.</span></div>
+<div class="bl" style="animation: fromR .6s 55s both;"><span class="bn" style="background: #DDF3F7; color: #0E7490;">3</span><span class="bt" style="font-size: 18px;">Maintenance: Brand Adaptive.</span></div>
+<div class="call" style="background: #0B2545; animation: pop .5s 63s both;"><span class="lab" style="color: #FFFFFF; opacity: .8;">Tip</span><span style="font-size: 18px; font-weight: 900; line-height: 1.35;">Good context for the case. It doesn&rsquo;t change your three steps.</span></div>
+</div>
+</div>
+</div>
+</div>
+</template>
+
+<!-- ============ SCENE 4 · PROTECT CASES ============ -->
+<template id="scene-4">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div class="sh" style="animation: up .6s .2s both;"><div class="h2">Part 4: What customers test</div><div class="h2s">So you recognize UAT cases when they arrive.</div></div>
+<div class="sc" style="left: 40px; width: 592px; background: #E3E8F0; color: #0B2545; animation: up .6s 1.4s both, litRing 22s 4s both;"><div class="sr"><span class="sn" style="background: #0B2545;">1</span><span class="tg" style="background: #0B2545;">The checklist</span></div><div class="st">Seven areas</div><svg class="mk" width="28" height="28" style="animation: pop .5s 25.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="sc" style="left: 648px; width: 592px; background: #FCE3CC; color: #C2410C; animation: up .6s 1.6s both, litRing 22s 26s both;"><div class="sr"><span class="sn" style="background: #C2410C;">2</span><span class="tg" style="background: #C2410C;">Case samples</span></div><div class="st">Examples</div><svg class="mk" width="28" height="28" style="animation: pop .5s 47.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="panel" style="animation: up .7s 2.2s both;">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #8A99AD; animation: fadeOut .5s 3.8s forwards;">What is the customer looking at?</div>
+<div class="win" style="animation: win 22s 4s both;">
+<div class="shot" style="background: #EEF1F5; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"><div style="height: 78px; padding: 10px 14px; border-radius: 14px; background: #DCE7F7; border: 2px solid #1466F0; display: flex; flex-direction: column; gap: 4px; justify-content: center; animation: pop .45s 5s both;"><b style="font-size: 15px; color: #0B2545;">Translation quality</b><span style="font-size: 13px; color: #3B4F6B;">Accurate, and on brand?</span></div><div style="height: 78px; padding: 10px 14px; border-radius: 14px; background: #E3F4E5; border: 2px solid #2E7D32; display: flex; flex-direction: column; gap: 4px; justify-content: center; animation: pop .45s 6.3s both;"><b style="font-size: 15px; color: #0B2545;">Functionality</b><span style="font-size: 13px; color: #3B4F6B;">Buttons, forms, menus, checkout.</span></div><div style="height: 78px; padding: 10px 14px; border-radius: 14px; background: #DDF3F7; border: 2px solid #0E7490; display: flex; flex-direction: column; gap: 4px; justify-content: center; animation: pop .45s 7.6s both;"><b style="font-size: 15px; color: #0B2545;">Navigation</b><span style="font-size: 13px; color: #3B4F6B;">Links go to the right localized pages?</span></div><div style="height: 78px; padding: 10px 14px; border-radius: 14px; background: #E8EAFD; border: 2px solid #5867E8; display: flex; flex-direction: column; gap: 4px; justify-content: center; animation: pop .45s 8.9s both;"><b style="font-size: 15px; color: #0B2545;">Content coverage</b><span style="font-size: 13px; color: #3B4F6B;">All expected pages translated?</span></div><div style="height: 78px; padding: 10px 14px; border-radius: 14px; background: #FCE3CC; border: 2px solid #C2410C; display: flex; flex-direction: column; gap: 4px; justify-content: center; animation: pop .45s 10.2s both;"><b style="font-size: 15px; color: #0B2545;">Visual presentation</b><span style="font-size: 13px; color: #3B4F6B;">Translated content displays correctly?</span></div><div style="height: 78px; padding: 10px 14px; border-radius: 14px; background: #FFF1F0; border: 2px solid #B42318; display: flex; flex-direction: column; gap: 4px; justify-content: center; animation: pop .45s 11.5s both;"><b style="font-size: 15px; color: #0B2545;">Technical behavior</b><span style="font-size: 13px; color: #3B4F6B;">JavaScript errors, redirects, loading.</span></div><div style="height: 78px; padding: 10px 14px; border-radius: 14px; background: #E3E8F0; border: 2px solid #0B2545; display: flex; flex-direction: column; gap: 4px; justify-content: center; animation: pop .45s 12.8s both;"><b style="font-size: 15px; color: #0B2545;">SEO</b><span style="font-size: 13px; color: #3B4F6B;">Localized URLs, metadata, hreflang.</span></div></div></div>
+<div class="tc2">
+<div class="eb" style="color: #0B2545;">What they test &middot; 1 of 2</div>
+<div class="tt" style="font-size: 26px;">Seven areas</div>
+<div class="bl" style="animation: fromR .6s 5s both;"><span class="bn" style="background: #DCE7F7; color: #1466F0;">1</span><span class="bt" style="font-size: 18px;">Translations and coverage.</span></div>
+<div class="bl" style="animation: fromR .6s 6.3s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">2</span><span class="bt" style="font-size: 18px;">Functionality and navigation.</span></div>
+<div class="bl" style="animation: fromR .6s 10.2s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">3</span><span class="bt" style="font-size: 18px;">Visuals, tech and SEO.</span></div>
+</div>
+</div>
+<div class="win" style="animation: win 22s 26s both;">
+<div class="shot" style="background: #FCE3CC; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; display: flex; flex-direction: column; gap: 10px;"><div style="display: flex; gap: 12px; align-items: center; height: 56px; padding: 0 16px; border-radius: 14px; background: #FFF; border: 2px solid #DD7A01; animation: fromL .45s 27s both;"><span style="color: #DD7A01; font-size: 18px;">&#9888;</span><span style="font-size: 14.5px; color: #0B2545;">&ldquo;Some pages on the Spanish site are still in English.&rdquo;</span></div><div style="display: flex; gap: 12px; align-items: center; height: 56px; padding: 0 16px; border-radius: 14px; background: #FFF; border: 2px solid #DD7A01; animation: fromL .45s 28.6s both;"><span style="color: #DD7A01; font-size: 18px;">&#9888;</span><span style="font-size: 14.5px; color: #0B2545;">&ldquo;The checkout button does nothing on the French site.&rdquo;</span></div><div style="display: flex; gap: 12px; align-items: center; height: 56px; padding: 0 16px; border-radius: 14px; background: #FFF; border: 2px solid #DD7A01; animation: fromL .45s 30.2s both;"><span style="color: #DD7A01; font-size: 18px;">&#9888;</span><span style="font-size: 14.5px; color: #0B2545;">&ldquo;Our product name shouldn&rsquo;t be translated.&rdquo;</span></div><div style="display: flex; gap: 12px; align-items: center; height: 56px; padding: 0 16px; border-radius: 14px; background: #FFF; border: 2px solid #DD7A01; animation: fromL .45s 31.8s both;"><span style="color: #DD7A01; font-size: 18px;">&#9888;</span><span style="font-size: 14.5px; color: #0B2545;">&ldquo;The menu overlaps the logo in German.&rdquo;</span></div></div><div style="position: absolute; left: 20px; top: 290px; width: 660px; height: 88px; border-radius: 20px; background: #C2410C; color: #FFFFFF; display: flex; align-items: center; gap: 18px; padding: 0 30px; animation: up .7s 35s both;"><span style="font-size: 15.5px; font-weight: 900; line-height: 1.45;">They look like normal cases. With the UAT banner, they all get the same three steps.</span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #C2410C;">What they test &middot; 2 of 2</div>
+<div class="tt" style="font-size: 26px;">What UAT cases look like</div>
+<div class="bl" style="animation: fromR .6s 27s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">1</span><span class="bt" style="font-size: 18px;">Untranslated pages, broken buttons.</span></div>
+<div class="bl" style="animation: fromR .6s 30s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">2</span><span class="bt" style="font-size: 18px;">Wording and layout issues.</span></div>
+<div class="bl" style="animation: fromR .6s 35s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">3</span><span class="bt" style="font-size: 18px;">Same three steps for all of them.</span></div>
+</div>
+</div>
+</div>
+</div>
+</template>
+
+<!-- ============ SCENE 5 · ANY TIME ============ -->
+<template id="scene-5">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div class="sh" style="animation: up .6s .2s both;"><div class="h2">Part 5: Your job</div><div class="h2s">Route it. Don&rsquo;t fix it.</div></div>
+<div class="sc" style="left: 40px; width: 592px; background: #E3F4E5; color: #2E7D32; animation: up .6s 1.4s both, litRing 22s 4s both;"><div class="sr"><span class="sn" style="background: #2E7D32;">1</span><span class="tg" style="background: #2E7D32;">Your whole job</span></div><div class="st">3 steps</div><svg class="mk" width="28" height="28" style="animation: pop .5s 25.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="sc" style="left: 648px; width: 592px; background: #E3F4E5; color: #2E7D32; animation: up .6s 1.6s both, litRing 22s 26s both;"><div class="sr"><span class="sn" style="background: #2E7D32;">2</span><span class="tg" style="background: #2E7D32;">Copy-ready</span></div><div class="st">The note</div><svg class="mk" width="28" height="28" style="animation: pop .5s 47.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="panel" style="animation: up .7s 2.2s both;">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #8A99AD; animation: fadeOut .5s 3.8s forwards;">So what do you do?</div>
+<div class="win" style="animation: win 22s 4s both;">
+<div class="shot" style="background: #E3F4E5; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; display: flex; flex-direction: column; gap: 8px;"><div class="row" style="height: 78px; font-size: 14.5px; animation: up .45s 5s both;"><span class="sn" style="background: #1466F0;">1</span><span><b>Complete the milestone.</b></span></div><div class="row" style="height: 78px; font-size: 14.5px; animation: up .45s 7.5s both;"><span class="sn" style="background: #2F7A22;">2</span><span><b>Acknowledge the customer</b> with a customer-visible note.</span></div><div class="row" style="height: 78px; font-size: 14.5px; animation: up .45s 10s both;"><span class="sn" style="background: #C2410C;">3</span><span><b>Assign the case</b> to the team the MPD email names: QA, TAM, PE or PM.</span></div></div><div style="position: absolute; left: 20px; top: 290px; width: 660px; height: 88px; border-radius: 20px; background: #2F7A22; color: #FFFFFF; display: flex; align-items: center; gap: 18px; padding: 0 30px; animation: up .7s 14s both;"><svg width="36" height="36" style="flex-shrink: 0; color: #FFD27A;"><use href="#dc-check"></use></svg><span style="font-size: 18px; font-weight: 900;">That&rsquo;s it. Your part is done.</span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #2E7D32;">Your job &middot; 1 of 2</div>
+<div class="tt" style="font-size: 26px;">Three steps</div>
+<div class="bl" style="animation: fromR .6s 5s both;"><span class="bn" style="background: #DCE7F7; color: #1466F0;">1</span><span class="bt" style="font-size: 18px;">Complete the milestone.</span></div>
+<div class="bl" style="animation: fromR .6s 7.5s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">2</span><span class="bt" style="font-size: 18px;">Customer-visible note.</span></div>
+<div class="bl" style="animation: fromR .6s 10s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">3</span><span class="bt" style="font-size: 18px;">Assign to the team in the MPD email.</span></div>
+</div>
+</div>
+<div class="win" style="animation: win 22s 26s both;">
+<div class="shot" style="background: #E3F4E5; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 660px; height: 200px; border-radius: 14px; background: #FFFFFF; border: 3px solid #2F7A22; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; animation: zoomIn .6s 27s both;"><span style="display: flex; align-items: center; gap: 8px;"><span style="width: 22px; height: 22px; border-radius: 11px; background: #2F7A22; color: #FFFFFF; font-size: 13px; font-weight: 900; display: flex; align-items: center; justify-content: center;">&#10003;</span><b style="font-size: 13px; color: #2F7A22; letter-spacing: .06em; text-transform: uppercase;">Customer-visible note</b></span><span style="font-size: 13px; color: #0B2545; line-height: 1.5; animation: fadeIn .5s 28s both;">Hello Alex,<br><br>Thank you for your feedback during your testing (UAT) period. We&rsquo;ve received it and shared it with your project team, who will review it and follow up with you directly.<br><br>Kind regards,</span></div><div style="position: absolute; left: 20px; top: 232px; width: 660px; height: 146px; border-radius: 16px; background: #E8EAFD; border: 3px solid #5867E8; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; animation: pop .55s 33s both;"><b style="font-size: 15.5px; color: #0B2545;">Why so short?</b><span style="font-size: 14px; color: #0B2545; line-height: 1.5;">The PM handles all customer communication during UAT. Your note confirms we received it, without promising fixes or dates.</span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #2E7D32;">Your job &middot; 2 of 2</div>
+<div class="tt" style="font-size: 26px;">The customer note</div>
+<div class="bl" style="animation: fromR .6s 27s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">1</span><span class="bt" style="font-size: 18px;">Thank them, and confirm we received it.</span></div>
+<div class="bl" style="animation: fromR .6s 29s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">2</span><span class="bt" style="font-size: 18px;">The project team follows up.</span></div>
+<div class="bl" style="animation: fromR .6s 33s both;"><span class="bn" style="background: #FFF1F0; color: #B42318;">3</span><span class="bt" style="font-size: 18px;">No fixes, no dates, no promises.</span></div>
+<div class="call" style="background: #0B2545; animation: pop .5s 38s both;"><span class="lab" style="color: #FFFFFF; opacity: .8;">Kit</span><span style="font-size: 18px; font-weight: 900; line-height: 1.35;">Copy it from the UAT kit button.</span></div>
+</div>
+</div>
+</div>
+</div>
+</template>
+
+<!-- ============ SCENE 6 · FOLLOW UP ============ -->
+<template id="scene-6">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div class="sh" style="animation: up .6s .2s both;"><div class="h2">Part 6: The rules, and why</div><div class="h2s">What never to do, and what it costs.</div></div>
+<div class="sc" style="left: 40px; width: 592px; background: #FFF1F0; color: #B42318; animation: up .6s 1.4s both, litRing 22s 4s both;"><div class="sr"><span class="sn" style="background: #B42318;">1</span><span class="tg" style="background: #B42318;">The rules</span></div><div class="st">DO / DON&rsquo;T</div><svg class="mk" width="28" height="28" style="animation: pop .5s 25.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="sc" style="left: 648px; width: 592px; background: #FFF1F0; color: #B42318; animation: up .6s 1.6s both, litRing 22s 26s both;"><div class="sr"><span class="sn" style="background: #B42318;">2</span><span class="tg" style="background: #B42318;">What goes wrong</span></div><div class="st">Why</div><svg class="mk" width="28" height="28" style="animation: pop .5s 47.4s both;"><use href="#dc-check"></use></svg></div>
+<div class="panel" style="animation: up .7s 2.2s both;">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #8A99AD; animation: fadeOut .5s 3.8s forwards;">A few firm rules.</div>
+<div class="win" style="animation: win 22s 4s both;">
+<div class="shot" style="background: #FFF1F0; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 320px; height: 364px; border-radius: 16px; background: #E5F4DE; border: 3px solid #2F7A22; padding: 12px 14px; display: flex; flex-direction: column; gap: 7px; animation: zoomIn .6s 5s both;"><span style="font-size: 15px; font-weight: 900; letter-spacing: .1em; color: #2F7A22;">DO</span><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 6s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #2F7A22; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&#10003;</span><span>Complete the milestone.</span></div><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 7.2s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #2F7A22; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&#10003;</span><span>Post a customer-visible note.</span></div><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 8.4s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #2F7A22; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&#10003;</span><span>Assign to the team in the MPD email.</span></div><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 9.6s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #2F7A22; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&#10003;</span><span>In doubt? Ask the project&rsquo;s PM.</span></div></div><div style="position: absolute; left: 360px; top: 14px; width: 320px; height: 364px; border-radius: 16px; background: #FFF1F0; border: 3px solid #B42318; padding: 12px 14px; display: flex; flex-direction: column; gap: 7px; animation: zoomIn .6s 10.8s both;"><span style="font-size: 15px; font-weight: 900; letter-spacing: .1em; color: #B42318;">DON&rsquo;T</span><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 11.8s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #B42318; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&times;</span><span>Troubleshoot the issue.</span></div><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 13s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #B42318; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&times;</span><span>Assign it to the Delivery Team.</span></div><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 14.2s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #B42318; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&times;</span><span>Bill time on a UAT case.</span></div><div style="display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 10px; background: #FFFFFF; font-size: 13.5px; color: #0B2545; line-height: 1.35; animation: up .45s 15.4s both;"><span style="width: 20px; height: 20px; border-radius: 10px; background: #B42318; color: #FFFFFF; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">&times;</span><span>Discuss fixes or dates with the customer.</span></div></div></div>
+<div class="tc2">
+<div class="eb" style="color: #B42318;">The rules &middot; 1 of 2</div>
+<div class="tt" style="font-size: 26px;">DO and DON&rsquo;T</div>
+<div class="bl" style="animation: fromR .6s 5s both;"><span class="bn" style="background: #E5F4DE; color: #2F7A22;">1</span><span class="bt" style="font-size: 18px;">Do: milestone, note, assign.</span></div>
+<div class="bl" style="animation: fromR .6s 10s both;"><span class="bn" style="background: #FFF1F0; color: #B42318;">2</span><span class="bt" style="font-size: 18px;">Don&rsquo;t troubleshoot or assign to Delivery.</span></div>
+<div class="bl" style="animation: fromR .6s 12.5s both;"><span class="bn" style="background: #FFF1F0; color: #B42318;">3</span><span class="bt" style="font-size: 18px;">Never bill on UAT cases.</span></div>
+</div>
+</div>
+<div class="win" style="animation: win 22s 26s both;">
+<div class="shot" style="background: #FFF1F0; display: block;"><div style="position: absolute; left: 20px; top: 14px; width: 206px; height: 260px; border-radius: 16px; background: #FFF1F0; border: 2px solid #B42318; padding: 14px; display: flex; flex-direction: column; gap: 10px; animation: pop .5s 27s both;"><b style="font-size: 16px; color: #0B2545;">Wrong billing</b><span style="font-size: 13.5px; color: #0B2545; line-height: 1.5;">UAT work is part of the project. Time billed on it goes on the wrong invoice.</span></div><div style="position: absolute; left: 247px; top: 14px; width: 206px; height: 260px; border-radius: 16px; background: #FCE3CC; border: 2px solid #C2410C; padding: 14px; display: flex; flex-direction: column; gap: 10px; animation: pop .5s 29.5s both;"><b style="font-size: 16px; color: #0B2545;">Confusion</b><span style="font-size: 13.5px; color: #0B2545; line-height: 1.5;">Two teams work the same issue, or the customer hears different answers.</span></div><div style="position: absolute; left: 474px; top: 14px; width: 206px; height: 260px; border-radius: 16px; background: #E8EAFD; border: 2px solid #5867E8; padding: 14px; display: flex; flex-direction: column; gap: 10px; animation: pop .5s 32s both;"><b style="font-size: 16px; color: #0B2545;">Delayed Go-Live</b><span style="font-size: 13.5px; color: #0B2545; line-height: 1.5;">If the case doesn&rsquo;t reach the assigned team fast, the launch can slip.</span></div><div style="position: absolute; left: 20px; top: 292px; width: 660px; height: 86px; border-radius: 20px; background: #0B2545; color: #FFFFFF; display: flex; align-items: center; gap: 18px; padding: 0 30px; animation: up .7s 36s both;"><span style="font-size: 15.5px; font-weight: 900; line-height: 1.45;">Route fast, route right, and let the project team fix it.</span></div></div>
+<div class="tc2">
+<div class="eb" style="color: #B42318;">The rules &middot; 2 of 2</div>
+<div class="tt" style="font-size: 26px;">Why it matters</div>
+<div class="bl" style="animation: fromR .6s 27s both;"><span class="bn" style="background: #FFF1F0; color: #B42318;">1</span><span class="bt" style="font-size: 18px;">Wrong billing.</span></div>
+<div class="bl" style="animation: fromR .6s 29.5s both;"><span class="bn" style="background: #FCE3CC; color: #C2410C;">2</span><span class="bt" style="font-size: 18px;">Confusion between teams.</span></div>
+<div class="bl" style="animation: fromR .6s 32s both;"><span class="bn" style="background: #E8EAFD; color: #5867E8;">3</span><span class="bt" style="font-size: 18px;">A delayed Go-Live.</span></div>
+</div>
+</div>
+</div>
+</div>
+</template>
+
+<!-- ============ SCENE 7 · PRACTICE ============ -->
+<template id="scene-7">
+<div style="position: absolute; left: 0; top: 72px; width: 1280px; height: 648px;">
+<div class="sh" style="animation: up .6s .2s both;"><div class="h2">Part 7: Practice. What would you do?</div><div class="h2s">Think of your answer before it appears.</div></div>
+<div style="position: absolute; left: 160px; top: 80px; width: 960px; height: 520px; animation: win 10s 4s both;"><div class="wc" style="left: 0; top: 0; width: 960px; height: 190px; padding: 26px 32px; display: flex; flex-direction: column; gap: 12px;"><span class="lab">Question 1</span><span class="disp" style="font-size: 26px; font-weight: 600; color: #0B2545; line-height: 1.35;">A case has the orange UAT banner: &ldquo;The Spanish checkout button does nothing.&rdquo;</span></div><div style="position: absolute; left: 0; top: 220px; width: 960px; min-height: 120px; border-radius: 18px; background: #E3F4E5; border: 3px solid #2E7D32; padding: 22px 28px; display: flex; align-items: center; gap: 18px; animation: pop .5s 9s both;"><svg width="40" height="40" style="flex-shrink: 0;"><use href="#dc-check"></use></svg><span style="font-size: 23px; font-weight: 900; color: #0B2545; line-height: 1.4;">Complete the milestone, post the customer-visible note, and assign it to the team in the MPD email. Don&rsquo;t troubleshoot.</span></div></div>
+<div style="position: absolute; left: 160px; top: 80px; width: 960px; height: 520px; animation: win 10s 14s both;"><div class="wc" style="left: 0; top: 0; width: 960px; height: 190px; padding: 26px 32px; display: flex; flex-direction: column; gap: 12px;"><span class="lab">Question 2</span><span class="disp" style="font-size: 26px; font-weight: 600; color: #0B2545; line-height: 1.35;">You spent 10 minutes on a UAT case. Do you bill it?</span></div><div style="position: absolute; left: 0; top: 220px; width: 960px; min-height: 120px; border-radius: 18px; background: #FFF1F0; border: 3px solid #B42318; padding: 22px 28px; display: flex; align-items: center; gap: 18px; animation: pop .5s 19s both;"><svg width="40" height="40" style="flex-shrink: 0;"><use href="#dc-check"></use></svg><span style="font-size: 23px; font-weight: 900; color: #0B2545; line-height: 1.4;">No. UAT cases are never billable.</span></div></div>
+<div style="position: absolute; left: 160px; top: 80px; width: 960px; height: 520px; animation: win 10s 24s both;"><div class="wc" style="left: 0; top: 0; width: 960px; height: 190px; padding: 26px 32px; display: flex; flex-direction: column; gap: 12px;"><span class="lab">Question 3</span><span class="disp" style="font-size: 26px; font-weight: 600; color: #0B2545; line-height: 1.35;">The customer replies: &ldquo;When will it be fixed?&rdquo;</span></div><div style="position: absolute; left: 0; top: 220px; width: 960px; min-height: 120px; border-radius: 18px; background: #E8EAFD; border: 3px solid #5867E8; padding: 22px 28px; display: flex; align-items: center; gap: 18px; animation: pop .5s 29s both;"><svg width="40" height="40" style="flex-shrink: 0;"><use href="#dc-check"></use></svg><span style="font-size: 23px; font-weight: 900; color: #0B2545; line-height: 1.4;">Don&rsquo;t promise a date. Make sure the assigned team and the PM see it. The PM handles all customer communication.</span></div></div>
+<div style="position: absolute; left: 160px; top: 80px; width: 960px; height: 520px; animation: win 10s 34s both;"><div class="wc" style="left: 0; top: 0; width: 960px; height: 190px; padding: 26px 32px; display: flex; flex-direction: column; gap: 12px;"><span class="lab">Question 4</span><span class="disp" style="font-size: 26px; font-weight: 600; color: #0B2545; line-height: 1.35;">The banner is there, but you can&rsquo;t find the MPD email.</span></div><div style="position: absolute; left: 0; top: 220px; width: 960px; min-height: 120px; border-radius: 18px; background: #DCE7F7; border: 3px solid #1466F0; padding: 22px 28px; display: flex; align-items: center; gap: 18px; animation: pop .5s 39s both;"><svg width="40" height="40" style="flex-shrink: 0;"><use href="#dc-check"></use></svg><span style="font-size: 23px; font-weight: 900; color: #0B2545; line-height: 1.4;">Reach out to the project&rsquo;s PM directly before you assign it.</span></div></div>
+<div style="position: absolute; left: 160px; top: 80px; width: 960px; height: 520px; animation: win 10s 44s both;"><div class="wc" style="left: 0; top: 0; width: 960px; height: 190px; padding: 26px 32px; display: flex; flex-direction: column; gap: 12px;"><span class="lab">Question 5</span><span class="disp" style="font-size: 26px; font-weight: 600; color: #0B2545; line-height: 1.35;">A teammate says UAT is just another word for QA. True?</span></div><div style="position: absolute; left: 0; top: 220px; width: 960px; min-height: 120px; border-radius: 18px; background: #FCE3CC; border: 3px solid #C2410C; padding: 22px 28px; display: flex; align-items: center; gap: 18px; animation: pop .5s 49s both;"><svg width="40" height="40" style="flex-shrink: 0;"><use href="#dc-check"></use></svg><span style="font-size: 23px; font-weight: 900; color: #0B2545; line-height: 1.4;">No. QA is our internal check. UAT is the customer checking that it meets their business needs.</span></div></div>
+<div style="position: absolute; left: 40px; top: 66px; width: 1200px; height: 566px; border-radius: 22px; background: #E3F4E5; padding: 22px 26px; display: flex; flex-direction: column; gap: 10px; animation: pop .6s 55s both;"><span class="disp" style="font-size: 26px; font-weight: 700; color: #0B2545; margin-bottom: 4px;">Recap: UAT cases</span><div style="display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 14px; background: #DCE7F7; border: 2px solid #1466F0; animation: fromL .5s 56.5s both;"><b style="width: 170px; font-size: 15px; color: #0B2545; flex-shrink: 0;">What it is</b><span style="font-size: 14px; color: #0B2545; line-height: 1.4;">The customer tests the translated site before Go-Live. Not the same as our QA.</span></div><div style="display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 14px; background: #FCE3CC; border: 2px solid #C2410C; animation: fromL .5s 58.7s both;"><b style="width: 170px; font-size: 15px; color: #0B2545; flex-shrink: 0;">How you spot it</b><span style="font-size: 14px; color: #0B2545; line-height: 1.4;">The orange UAT banner in Salesforce, and the MPD email.</span></div><div style="display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 14px; background: #E3F4E5; border: 2px solid #2E7D32; animation: fromL .5s 60.9s both;"><b style="width: 170px; font-size: 15px; color: #0B2545; flex-shrink: 0;">Your 3 steps</b><span style="font-size: 14px; color: #0B2545; line-height: 1.4;">Complete the milestone, post a customer-visible note, assign to the team in the MPD email.</span></div><div style="display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 14px; background: #FFF1F0; border: 2px solid #B42318; animation: fromL .5s 63.1s both;"><b style="width: 170px; font-size: 15px; color: #0B2545; flex-shrink: 0;">Never</b><span style="font-size: 14px; color: #0B2545; line-height: 1.4;">Troubleshoot, assign to the Delivery Team, bill time, or discuss fixes or dates.</span></div><div style="display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 14px; background: #E8EAFD; border: 2px solid #5867E8; animation: fromL .5s 65.3s both;"><b style="width: 170px; font-size: 15px; color: #0B2545; flex-shrink: 0;">In doubt</b><span style="font-size: 14px; color: #0B2545; line-height: 1.4;">Reach out to the project&rsquo;s PM.</span></div><div style="margin-top: auto; padding: 14px 20px; border-radius: 14px; background: #0B2545; color: #FFFFFF; font-size: 20px; font-weight: 900; animation: pop .5s 69s both;">Route it, don&rsquo;t fix it. If in doubt, ask: Support team, Tier II or Director of Customer Support.</div></div>
+</div>
+</template>
+
+<div id="sceneHost" style="position: absolute; inset: 0;"></div>
+
+<!-- ============ COVER ============ -->
+<div id="cover">
+<div style="position: absolute; inset: 0; background: #0B2545; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; color: #FFFFFF;">
+<div style="font-size: 16px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: #8FD16F;">MotionPoint Support &middot; New Agent Training</div>
+<h1 class="disp" style="margin: 0; font-size: 64px; line-height: 1.05; font-weight: 700;">UAT Cases: Route, Don&rsquo;t Fix</h1>
+<p style="margin: 0; font-size: 22px; color: #C9D6E8; max-width: 800px;">What the UAT period is, how to spot a UAT case, and your three steps: milestone, customer note, assign. No troubleshooting, no billing. About 6 minutes, with background music.</p>
+<button type="button" id="coverPlay" style="margin-top: 14px; height: 72px; padding: 0 40px; border-radius: 36px; border: none; background: #1466F0; color: #FFFFFF; font-family: 'Lexend', sans-serif; font-size: 26px; font-weight: 600; display: flex; align-items: center; gap: 14px; cursor: pointer; box-shadow: 0 16px 40px rgba(20,102,240,.45);">
+<svg width="26" height="26" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="#FFFFFF"></path></svg>Play</button>
+</div>
+</div>
+
+</div>
+
+<!-- ===================== SUBTITLES ===================== -->
+<div style="height: 70px; flex-shrink: 0; background: #0B1626; display: flex; align-items: center; justify-content: center; padding: 0 48px; position: relative; overflow: hidden;">
+<div id="subs" style="display: contents;"></div>
+</div>
+
+<!-- ===================== CONTROLS ===================== -->
+<div style="height: 80px; flex-shrink: 0; background: #0E1B2E; display: flex; flex-direction: column;">
+<div style="height: 6px; background: #1D2E48;"><div id="prog" style="height: 6px; width: 0%; background: #5DB645;"></div></div>
+<div style="flex-grow: 1; display: flex; align-items: center; gap: 10px; padding: 0 20px;">
+<button type="button" class="ctl main" id="playBtn" aria-label="Play">
+<span id="icoPause" style="display: contents;" hidden><svg width="18" height="18" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1" fill="#FFFFFF"></rect><rect x="14" y="4.5" width="4" height="15" rx="1" fill="#FFFFFF"></rect></svg></span>
+<span id="icoPlay" style="display: contents;"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="#FFFFFF"></path></svg></span>
+<span id="playLabel">Play</span>
+</button>
+<button type="button" class="ctl" id="replayBtn" aria-label="Replay from start">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E6EEF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>
+</button>
+<button type="button" class="ctl" id="back10Btn" aria-label="Back 10 seconds" title="Back 10 seconds (Left arrow)">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E6EEF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5"></path><path d="M18 17l-5-5 5-5"></path></svg>
+<span>10s</span>
+</button>
+<button type="button" class="ctl" id="fwd10Btn" aria-label="Forward 10 seconds" title="Forward 10 seconds (Right arrow)">
+<span>10s</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E6EEF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5"></path><path d="M6 17l5-5-5-5"></path></svg>
+</button>
+<button type="button" class="ctl" id="musicBtn" aria-label="Music on" aria-pressed="true">
+<span id="icoMusicOn" style="display: contents;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8FD16F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="17" cy="16" r="3"></circle></svg></span>
+<span id="icoMusicOff" style="display: contents;" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9B8CC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="17" cy="16" r="3"></circle><path d="M3 3l18 18"></path></svg></span>
+<span id="musicLabel" style="display:none">Music on</span>
+</button>
+<button type="button" class="ctl" id="subsBtn" aria-label="Hide captions" aria-pressed="true">
+<svg width="22" height="18" viewBox="0 0 26 20" fill="none" id="subsIcon" stroke="#8FD16F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="23" height="17" rx="3"></rect><path d="M11 8.2a3 3 0 1 0 0 3.6"></path><path d="M19 8.2a3 3 0 1 0 0 3.6"></path></svg>
+</button>
+<button type="button" class="ctl" id="prevBtn" aria-label="Previous scene">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E6EEF8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</button>
+<button type="button" class="ctl" id="nextBtn" aria-label="Next scene">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E6EEF8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+</button>
+<div style="width: 1px; height: 30px; background: #2A3E5C; margin: 0 4px;"></div>
+<div style="display: flex; gap: 4px; flex-grow: 1; overflow: hidden;">
+<span id="chapters" style="display: contents;"></span>
+</div>
+<div style="font-size: 14px; font-weight: 700; color: #A9B8CC; white-space: nowrap; font-variant-numeric: tabular-nums;" id="timeLabel">0:00</div>
+</div>
+</div>
+
+
+</div>
+</div>
+<script>
+const STEP_HTML = "<div style=\"height: 52px; padding: 0 18px 0 6px; border-radius: 26px; background: #0B2545; color: #FFFFFF; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 16px rgba(11,37,69,.22); animation: pop 0.78s ease both;\">\n<span class=\"disp\" style=\"width: 40px; height: 40px; border-radius: 20px; background: #5DB645; color: #0B2545; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;\">{{st.n}}</span>\n<span style=\"font-size: 15px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase;\">Part {{st.n}} of 7</span>\n</div>";
+const SUB_OPEN = "<div style=\"position: absolute; left: 48px; right: 48px; top: 0; height: 70px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 22px; line-height: 1.3; font-weight: 700; color: #F4F7FB; animation: up 0.7s ease both;\">";
+function fit(){ const s = Math.min(window.innerWidth / 1280, window.innerHeight / 870); document.getElementById('fit').style.transform = 'scale(' + s + ')'; }
+window.addEventListener('resize', fit); fit();
+class Player {
+  constructor() {
+    this.state = { scene: 0, el: 0, playing: false, started: false, ended: false, music: true, subsOn: true };
+    this.ctx = null;
+  }
+  durs() { return [22000, 48000, 48000, 70000, 48000, 48000, 48000, 78000]; }
+  subLines() {
+    return [[[0, "Welcome! This video is about UAT cases, and your part in them."], [4500, "UAT is when the customer tests the translated site, before it goes live."], [7000, "You spot a UAT case by the orange banner in Salesforce, and the MPD email."], [9500, "Your job is short: complete the milestone, post a customer note, and assign the case."], [12000, "And never troubleshoot, assign to the Delivery Team, or bill time."], [16000, "Use the UAT kit button at the top of this page anytime."]],
+      [[0, "Part 1: what UAT is."], [5000, "UAT means User Acceptance Testing. The customer tests the translated website, or new functionality, in a test environment."], [9000, "It's their chance to say: we've tested it, and we're comfortable approving it for launch."], [13000, "Think of it as a test drive, before the green light to launch."], [26000, "UAT is not the same as QA."], [27000, "QA is MotionPoint's internal team, checking quality, functionality and the user experience."], [30000, "UAT is the customer, checking that what we delivered meets their business expectations."], [35000, "How long does UAT last? It depends on the project plan or agreement. For example, 5, 10 or 15 business days."]],
+      [[0, "Part 2: where UAT fits in a project."], [5000, "First, a MotionPoint project manager and translation team are assigned, and meet the customer."], [7500, "They prepare domain records and access, like CNAME records or CDN access."], [10000, "They build a style guide and glossary, with industry terms and the brand's voice."], [12500, "Then the customer reviews five translated sample pages."], [26000, "Next, the site is translated, proofread, implemented, and given a final review. That's our QA."], [28500, "Then comes UAT: the customer tests, reports issues, MotionPoint fixes them, and the customer approves."], [31000, "Then Go-Live: a code snippet activates the translated site."], [33500, "And finally, Operate. Support, the CXM, PM, TAM and other teams keep it running."], [38000, "UAT sits right before Go-Live, so delays here can delay the launch."]],
+      [[0, "Part 3: how you spot a UAT case."], [5000, "In Salesforce, a UAT case shows an orange banner."], [9000, "It reads: this case may be a part of a project's UAT phase."], [15000, "See the banner? Stop. Don't troubleshoot."], [26000, "You'll also get an MPD email. It goes to every team on the project."], [32000, "It shows the UAT period, and which team is assigned to work those cases."], [36000, "And the customer contacts."], [39000, "Search your Outlook for the MPD email by customer or project name."], [48000, "The Notes line tells you how the site is translated. For example: MTPE during the IC, Brand Adaptive once in maintenance."], [51000, "IC means Initial Conversion: the site's existing content is translated for the first time."], [55000, "That uses MTPE, Machine Translation Post-Editing. Machine translation drafts it, and human linguists review and edit it."], [59000, "Once the site is in maintenance, new and updated content uses Brand Adaptive: machine translation adapted to the customer's brand voice and terminology."], [64000, "So the IC builds the translated site with human review, and maintenance keeps it current, on brand, and at scale."], [67000, "Good context for the case, but it doesn't change your three steps."]],
+      [[0, "Part 4: what customers test during UAT."], [5000, "Translation quality, and whether every expected page is translated."], [7500, "Functionality, like buttons, forms, menus and checkout. And navigation: do links go to the right localized pages?"], [12000, "Visual presentation, technical behavior like JavaScript errors or redirects, and SEO."], [26000, "So UAT cases look like normal cases. Some pages are still in English. A button doesn't work. A product name shouldn't be translated. A menu overlaps the logo."], [35000, "But with the UAT banner, they all get the same three steps."]],
+      [[0, "Part 5: your job."], [5000, "Step one: complete the milestone."], [7500, "Step two: acknowledge the customer, with a customer-visible note."], [10000, "Step three: assign the case to the team the MPD email names: QA, TAM, PE or PM."], [14000, "That's it. Your part is done."], [26000, "Here's the customer note. Thank them, and confirm we received it."], [29000, "Their project team will review it, and follow up with them directly."], [33000, "Why so short? The PM handles all customer communication during UAT. So no fixes, no dates, and no promises."], [38000, "Copy the note from the UAT kit button."]],
+      [[0, "Part 6: the rules, and why they matter."], [5000, "Do: complete the milestone, post the customer note, and assign to the team in the MPD email. In doubt? Ask the project's PM."], [10000, "Don't troubleshoot the issue. Don't assign it to the Delivery Team."], [12500, "Don't bill time on a UAT case. And don't discuss fixes or dates with the customer."], [26000, "Why? First, wrong billing. UAT work is part of the project, so billed time goes on the wrong invoice."], [29500, "Second, confusion. Two teams work the same issue, or the customer hears different answers."], [32000, "Third, a delayed Go-Live, if the case doesn't reach the assigned team fast."], [36000, "So route fast, route right, and let the project team fix it."]],
+      [[0, "Part 7: practice. What would you do?"], [4000, "A case has the orange UAT banner. The Spanish checkout button does nothing."], [9000, "Complete the milestone, post the customer note, and assign it to the team in the MPD email. Don't troubleshoot."], [14000, "You spent 10 minutes on a UAT case. Do you bill it?"], [19000, "No. UAT cases are never billable."], [24000, "The customer replies: when will it be fixed?"], [29000, "Don't promise a date. Make sure the assigned team and the PM see it. The PM handles all customer communication."], [34000, "The banner is there, but you can't find the MPD email."], [39000, "Reach out to the project's PM directly before you assign it."], [44000, "A teammate says UAT is just another word for QA. True?"], [49000, "No. QA is our internal check. UAT is the customer's."], [55000, "Quick recap."], [69000, "Route it, don't fix it. If in doubt, ask the Support team, Tier II, or the Director of Customer Support. Thanks for watching!"]]];
+  }
+  labels() { return ["Intro", "What UAT is", "Where it fits", "Spot it", "What they test", "Your job", "The rules", "Practice"]; }
+
+  /* ---------- original background jazz, synthesized live ---------- */
+  bars() {
+    // [bass walk (MIDI), chord voicing (MIDI)] — ii-V-I in F with turnarounds, 80 bpm swing
+    return [
+      [[43, 46, 50, 47], [58, 62, 65, 69]], // Gm9
+      [[48, 46, 43, 40], [58, 62, 64, 69]], // C13
+      [[41, 45, 48, 49], [57, 60, 64, 67]], // Fmaj9
+      [[50, 48, 45, 44], [54, 60, 64, 69]], // D9
+      [[43, 46, 50, 47], [58, 62, 65, 69]], // Gm9
+      [[48, 46, 43, 40], [58, 62, 64, 69]], // C13
+      [[45, 48, 52, 51], [60, 64, 67, 71]], // Am9
+      [[50, 48, 45, 44], [54, 60, 64, 69]]  // D9
+    ];
+  }
+  hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+  initAudio() {
+    if (this.ctx) return true;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      const ctx = new AC();
+      const master = ctx.createGain();
+      master.gain.value = 0;
+      master.connect(ctx.destination);
+      const len = Math.floor(ctx.sampleRate * 1.0);
+      const noise = ctx.createBuffer(1, len, ctx.sampleRate);
+      const data = noise.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+      this.ctx = ctx; this.master = master; this.noise = noise;
+      this.beat = 0; this.nextT = 0;
+      return true;
+    } catch (e) { return false; }
+  }
+  pianoNote(m, t, vel, dur) {
+    const c = this.ctx;
+    const f = this.hz(m);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(2600, t); lp.frequency.exponentialRampToValueAtTime(900, t + dur);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vel, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(vel * 0.3, t + 0.4);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    lp.connect(g); g.connect(this.master);
+    [[1, 1], [2, 0.28], [3, 0.08]].forEach((h) => {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * h[0];
+      const hg = c.createGain(); hg.gain.value = h[1];
+      o.connect(hg); hg.connect(lp);
+      o.start(t); o.stop(t + dur + 0.05);
+    });
+  }
+  pianoChord(notes, t, vel, dur) {
+    notes.forEach((m, i) => this.pianoNote(m, t + i * 0.018, vel, dur));
+  }
+  tap(t, vol, dur, freq) {
+    const c = this.ctx;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = freq;
+    const g = c.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(this.master);
+    s.start(t); s.stop(t + dur + 0.02);
+  }
+  scheduleBeat(i, t) {
+    const spb = 60 / 80;
+    const sw = spb * 2 / 3;
+    const barIx = Math.floor(i / 4) % 8;
+    const bar = this.bars()[barIx];
+    const b = i % 4;
+    this.tap(t, 0.014, 0.25, 7500);
+    if (b === 1 || b === 3) {
+      this.tap(t + sw, 0.01, 0.18, 7500);
+      this.tap(t, 0.012, 0.05, 9500);
+    }
+    if (b === 0) {
+      this.pianoNote(bar[0][0] + 12, t, 0.05, 2.4);
+      this.pianoChord(bar[1], t + 0.03, 0.028, 2.2);
+    }
+    const v = Math.floor(i / 4) % 2;
+    if (b === 2 && v === 0) this.pianoChord(bar[1], t + sw, 0.018, 1.2);
+    if (b === 1 && v === 1) this.pianoChord(bar[1], t + sw, 0.018, 1.2);
+  }
+  schedule() {
+    const c = this.ctx;
+    if (!c || c.state !== 'running' || !this.musicLive) return;
+    if (this.nextT < c.currentTime) this.nextT = c.currentTime + 0.05;
+    while (this.nextT < c.currentTime + 0.3) {
+      this.scheduleBeat(this.beat, this.nextT);
+      this.beat = (this.beat + 1) % 32;
+      this.nextT += 60 / 80;
+    }
+  }
+  musicStart() {
+    if (!this.state.music || !this.initAudio()) return;
+    const c = this.ctx;
+    try { c.resume(); } catch (e) {}
+    if (!this.musicLive) {
+      this.musicLive = true;
+      this.beat = 0;
+      this.nextT = c.currentTime + 0.1;
+      this.master.gain.cancelScheduledValues(c.currentTime);
+      this.master.gain.setValueAtTime(0.0001, c.currentTime);
+      this.master.gain.exponentialRampToValueAtTime(0.55, c.currentTime + 1.5);
+    }
+  }
+  musicStop(fade) {
+    if (!this.ctx) return;
+    const c = this.ctx;
+    this.musicLive = false;
+    const now = c.currentTime;
+    this.master.gain.cancelScheduledValues(now);
+    this.master.gain.setValueAtTime(Math.max(this.master.gain.value, 0.0001), now);
+    this.master.gain.exponentialRampToValueAtTime(0.0001, now + (fade || 0.3));
+  }
+  musicPause() { if (this.ctx) { try { this.ctx.suspend(); } catch (e) {} } }
+  musicResume() { if (this.ctx && this.state.music) { try { this.ctx.resume(); } catch (e) {} } }
+
+  componentDidMount() {
+    this.iv = setInterval(() => this.tick(), 200);
+    this.au = setInterval(() => this.schedule(), 60);
+  }
+  componentWillUnmount() {
+    clearInterval(this.iv); clearInterval(this.au); clearTimeout(this.to);
+    if (this.ctx) { try { this.ctx.close(); } catch (e) {} }
+  }
+  tick() {
+    const s = this.state;
+    if (!s.playing || s.scene < 0) return;
+    const d = this.durs();
+    const el = s.el + 200;
+    if (el >= d[s.scene]) {
+      if (s.scene < d.length - 1) this.setState({ scene: s.scene + 1, el: 0 });
+      else { this.setState({ el: d[s.scene], playing: false, ended: true }); this.musicStop(3); }
+    } else {
+      this.setState({ el: el });
+    }
+  }
+  go(i, off) {
+    off = off || 0;
+    clearTimeout(this.to);
+    this.musicStart();
+    this.musicResume();
+    this.setState({ scene: -1, el: 0 });
+    this.to = setTimeout(() => {
+      this.setState({ scene: i, el: off, started: true, playing: true, ended: false });
+      if (off) setTimeout(() => this.sync(off), 60);
+    }, 40);
+  }
+  sync(off) {
+    try {
+      const st = document.querySelector('.stage');
+      if (!st || !st.getAnimations) return;
+      st.getAnimations({ subtree: true }).forEach((a) => { try { a.currentTime = off; } catch (e) {} });
+    } catch (e) {}
+  }
+  jump(delta) {
+    const d = this.durs();
+    const s = this.state;
+    const cur = s.scene < 0 ? 0 : s.scene;
+    let t = 0;
+    for (let i = 0; i < cur; i++) t += d[i];
+    t += (s.scene < 0 || !s.started) ? 0 : s.el;
+    const total = d.reduce((a, b) => a + b, 0);
+    t = Math.max(0, Math.min(t + delta, total - 500));
+    let i = 0;
+    while (i < d.length - 1 && t >= d[i]) { t -= d[i]; i++; }
+    this.go(i, t);
+  }
+  fmt(ms) {
+    const t = Math.floor(ms / 1000);
+    const m = Math.floor(t / 60);
+    const sec = t % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+  renderVals() {
+    const s = this.state;
+    const d = this.durs();
+    const total = d.reduce((a, b) => a + b, 0);
+    const cur = s.scene < 0 ? 0 : s.scene;
+    let done = 0;
+    for (let i = 0; i < cur; i++) done += d[i];
+    done += s.scene < 0 ? 0 : s.el;
+    const vis = s.started ? s.scene : -2;
+    const chapters = this.labels().map((label, i) => ({
+      label: label,
+      cls: s.started && i === cur ? 'on' : (s.started && i < cur ? 'done' : ''),
+      go: () => this.go(i)
+    }));
+    return {
+      s0: vis === 0, s1: vis === 1, s2: vis === 2, s3: vis === 3, s4: vis === 4, s5: vis === 5, s6: vis === 6, s7: vis === 7,
+      showCover: !s.started,
+      pauseCls: s.playing ? '' : 'paused',
+      isPlaying: s.playing,
+      notPlaying: !s.playing,
+      playLabel: s.playing ? 'Pause' : (s.ended ? 'Replay' : 'Play'),
+      progressW: (Math.min(1, done / total) * 100).toFixed(2) + '%',
+      timeLabel: this.fmt(done) + ' / ' + this.fmt(total),
+      chapters: chapters,
+      steps: [1, 2, 3, 4, 5, 6, 7].map((n) => ({ n: n, on: s.started && s.scene >= 0 && s.scene === n })),
+      showSubs: s.subsOn && s.started,
+      subs: (() => {
+        const L = s.scene >= 0 ? this.subLines()[s.scene] : [];
+        let act = -1;
+        L.forEach((c, i) => { if (s.el >= c[0]) act = i; });
+        return L.map((c, i) => ({ text: c[1], on: i === act }));
+      })(),
+      subsOn: s.subsOn,
+      subsLabel: s.subsOn ? 'Hide captions' : 'Show captions',
+      subsColor: s.subsOn ? '#8FD16F' : '#A9B8CC',
+      toggleSubs: () => this.setState({ subsOn: !this.state.subsOn }),
+      musicOn: s.music,
+      musicOff: !s.music,
+      musicLabel: s.music ? 'Music on' : 'Music off',
+      toggleMusic: () => {
+        const on = !this.state.music;
+        this.setState({ music: on }, () => {
+          if (!on) this.musicStop(0.6);
+          else if (this.state.playing) this.musicStart();
+        });
+      },
+      togglePlay: () => {
+        if (!this.state.started || this.state.ended) this.go(0);
+        else {
+          const playing = !this.state.playing;
+          if (playing) this.musicResume(); else this.musicPause();
+          this.setState({ playing: playing });
+        }
+      },
+      replay: () => this.go(0),
+      back10: () => this.jump(-10000),
+      fwd10: () => this.jump(10000),
+      prev: () => this.go(Math.max(0, cur - 1)),
+      next: () => this.go(Math.min(d.length - 1, cur + 1))
+    };
+  }
+}
+
+Player.prototype.setState = function (obj, cb) { Object.assign(this.state, obj); this.render(); if (cb) cb(); };
+Player.prototype.render = function () {
+  const v = this.renderVals();
+  const $ = (id) => document.getElementById(id);
+  const s = this.state;
+  const vis = s.started ? s.scene : -2;
+  if (vis !== this._vis) {
+    this._vis = vis;
+    const tpl = $('scene-' + vis);
+    $('sceneHost').innerHTML = tpl ? tpl.innerHTML : '';
+  }
+  $('stage').classList.toggle('paused', !s.playing);
+  $('cover').hidden = !v.showCover;
+  const st = v.steps.find((x) => x.on);
+  const stn = st ? st.n : 0;
+  if (stn !== this._step) { this._step = stn; $('steps').innerHTML = stn ? STEP_HTML.split('{{st.n}}').join(String(stn)) : ''; }
+  const sb = v.showSubs ? v.subs.find((x) => x.on) : null;
+  const key = sb ? s.scene + '|' + sb.text : '';
+  if (key !== this._sub) {
+    this._sub = key;
+    $('subs').innerHTML = '';
+    if (sb) { const d = document.createElement('div'); d.innerHTML = SUB_OPEN + '</div>'; d.firstChild.textContent = sb.text; $('subs').appendChild(d.firstChild); }
+  }
+  $('prog').style.width = v.progressW;
+  $('timeLabel').textContent = v.timeLabel;
+  $('playLabel').textContent = v.playLabel;
+  $('playBtn').setAttribute('aria-label', v.playLabel);
+  $('icoPause').hidden = !v.isPlaying; $('icoPlay').hidden = v.isPlaying;
+  $('musicLabel').textContent = v.musicLabel; $('musicBtn').setAttribute('aria-label', v.musicLabel); $('musicBtn').setAttribute('aria-pressed', String(v.musicOn));
+  $('icoMusicOn').hidden = !v.musicOn; $('icoMusicOff').hidden = v.musicOn;
+  $('subsBtn').setAttribute('aria-label', v.subsLabel); $('subsBtn').setAttribute('aria-pressed', String(v.subsOn)); $('subsIcon').setAttribute('stroke', v.subsColor);
+  const ck = v.chapters.map((c) => c.cls).join(',');
+  if (ck !== this._chips) {
+    this._chips = ck;
+    const host = $('chapters'); host.innerHTML = '';
+    v.chapters.forEach((c, i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip ' + c.cls; b.textContent = c.label;
+      b.addEventListener('click', () => this.go(i)); host.appendChild(b);
+    });
+  }
+};
+const P = new Player();
+const call = (k) => () => P.renderVals()[k]();
+document.getElementById('coverPlay').addEventListener('click', call('togglePlay'));
+document.getElementById('playBtn').addEventListener('click', call('togglePlay'));
+document.getElementById('replayBtn').addEventListener('click', call('replay'));
+document.getElementById('prevBtn').addEventListener('click', call('prev'));
+document.getElementById('back10Btn').addEventListener('click', call('back10'));
+document.getElementById('fwd10Btn').addEventListener('click', call('fwd10'));
+document.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') { e.preventDefault(); call('back10')(); } else if (e.key === 'ArrowRight') { e.preventDefault(); call('fwd10')(); } else if (e.key === ' ' && e.target === document.body) { e.preventDefault(); call('togglePlay')(); } });
+document.getElementById('nextBtn').addEventListener('click', call('next'));
+document.getElementById('musicBtn').addEventListener('click', call('toggleMusic'));
+document.getElementById('subsBtn').addEventListener('click', call('toggleSubs'));
+P.render();
+P.componentDidMount();
+
+</script>
+
+<style>
+#chapters .chip{padding-left:6px!important;padding-right:6px!important;font-size:11.5px!important}
+#hx-open{position:fixed;top:12px;right:12px;z-index:1000;height:40px;padding:0 16px;border-radius:20px;border:none;background:#C2410C;color:#fff;font:700 14px Lato,system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+#hx-open:focus-visible,#hx-modal button:focus-visible,#hx-modal input:focus-visible{outline:3px solid #FFD27A;outline-offset:2px}
+#hx-modal{position:fixed;inset:0;z-index:1001;background:rgba(5,12,24,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+#hx-modal[hidden]{display:none}
+#hx-box{width:min(780px,100%);max-height:calc(100vh - 32px);overflow-y:auto;display:flex;flex-direction:column;gap:12px;background:#fff;color:#0B2545;border-radius:18px;padding:20px;font-family:Lato,system-ui,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+#hx-box h2{margin:0;font:700 22px Lexend,Lato,sans-serif}
+#hx-box p{margin:0;font-size:14px;color:#3B4F6B;line-height:1.5}
+.hx-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.hx-f{display:flex;flex-direction:column;gap:4px}
+.hx-f label{font-weight:900;font-size:13px}
+.hx-f input{height:42px;box-sizing:border-box;border:2px solid #DCE1E8;border-radius:10px;padding:0 12px;font:15px Lato,system-ui,sans-serif;color:#0B2545;min-width:0}
+.hx-card{border:1px solid #DCE1E8;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.hx-out{white-space:pre-wrap;word-break:break-word;background:#F3F6FB;border-radius:10px;padding:10px;font:14px/1.5 Lato,system-ui,sans-serif;color:#0B2545;margin:0}
+.hx-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hx-row b{flex:1;font-size:15px}
+.hx-copy{height:34px;padding:0 14px;border-radius:17px;border:none;background:#2F7A22;color:#fff;font:700 14px Lato,system-ui,sans-serif;cursor:pointer}
+#hx-close{height:40px;padding:0 18px;border-radius:20px;border:1px solid #DCE1E8;background:#fff;color:#0B2545;font:700 15px Lato,system-ui,sans-serif;cursor:pointer;align-self:flex-start}
+.hx-msg{font-size:13px;font-weight:700;color:#2F7A22}
+.hx-note{background:#DDF3F1;border-radius:12px;padding:10px 12px;font-size:13.5px;color:#0B2545;line-height:1.45}
+@media (max-width:600px){.hx-grid{grid-template-columns:1fr}}
+</style>
+<button type="button" id="hx-open">UAT kit</button>
+<div id="hx-modal" hidden role="dialog" aria-modal="true" aria-labelledby="hx-title">
+<div id="hx-box">
+<h2 id="hx-title">UAT kit</h2>
+<div class="hx-note"><b>Spot it:</b> the orange banner on the case, &ldquo;This case may be a part of a project&rsquo;s UAT phase&rdquo;, and the MPD email with the UAT period and assigned team. &middot; <b>Your 3 steps:</b> complete the milestone, acknowledge the customer with a customer-visible note, assign to the team the MPD email names (QA, TAM, PE or PM). That&rsquo;s it. &middot; <b style="color:#B42318">Never:</b> troubleshoot, assign to the Delivery Team, bill time, or discuss fixes or dates with the customer. The PM handles all customer communication. &middot; <b>MPD Notes:</b> &ldquo;MTPE during the IC; Brand Adaptive once in maintenance&rdquo; means the Initial Conversion uses Machine Translation Post-Editing (machine draft, human-reviewed), and new or updated content in maintenance uses Brand Adaptive (machine translation adapted to the brand&rsquo;s voice and terms). &middot; <b>In doubt?</b> Reach out to the project&rsquo;s PM.</div>
+<div class="hx-f" style="max-width:320px"><label for="hx-subj">Customer contact name</label><input id="hx-subj" type="text" placeholder="Alex"></div>
+<div class="hx-card"><div class="hx-row"><b>Customer-visible note: acknowledge</b><button type="button" class="hx-copy" data-i="0">Copy</button><span class="hx-msg" aria-live="polite"></span></div><pre class="hx-out" id="hx-o0"></pre></div><div class="hx-card"><div class="hx-row"><b>Internal note: assignment</b><button type="button" class="hx-copy" data-i="1">Copy</button><span class="hx-msg" aria-live="polite"></span></div><pre class="hx-out" id="hx-o1"></pre></div>
+<button type="button" id="hx-close">Close</button>
+</div></div>
+<script>
+(function(){
+  var T = ["Hello {NAME},\n\nThank you for your feedback during your testing (UAT) period. We've received it and shared it with your project team, who will review it and follow up with you directly.\n\nKind regards,", "UAT case. Per the MPD email (UAT period: [dates]), assigned to [QA / TAM / PE / PM]. Milestone completed and customer acknowledged. Support did not troubleshoot. No billable time."];
+  var m = document.getElementById('hx-modal');
+  var g = function(id, ph){ var x = document.getElementById(id).value.trim(); return x || ph; };
+  function fill(){
+    var s = g('hx-subj', '[Name]');
+    T.forEach(function(t, i){ document.getElementById('hx-o' + i).textContent = t.split('{NAME}').join(s); });
+  }
+  ['hx-subj'].forEach(function(id){ document.getElementById(id).addEventListener('input', fill); });
+  fill();
+  document.getElementById('hx-open').addEventListener('click', function(){ m.hidden = false; document.getElementById('hx-subj').focus(); });
+  document.getElementById('hx-close').addEventListener('click', function(){ m.hidden = true; });
+  m.addEventListener('click', function(e){ if (e.target === m) m.hidden = true; });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !m.hidden) m.hidden = true; });
+  Array.prototype.forEach.call(document.querySelectorAll('.hx-copy'), function(b){
+    b.addEventListener('click', function(){
+      var src = document.getElementById('hx-o' + b.dataset.i), msg = b.parentNode.querySelector('.hx-msg');
+      var fb = function(){ var r = document.createRange(); r.selectNodeContents(src); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); try { document.execCommand('copy') ? (msg.textContent = 'Copied.') : (msg.textContent = 'Selected: press Ctrl+C.'); } catch (e) { msg.textContent = 'Selected: press Ctrl+C.'; } };
+      try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(src.textContent).then(function(){ msg.textContent = 'Copied.'; }, fb); else fb(); } catch (e) { fb(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
